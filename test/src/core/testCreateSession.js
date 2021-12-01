@@ -406,8 +406,8 @@ describe('test Request With Credentials', function () {
         capabilities: {version: 'TEST', platform: 'TEST'}
       });
     }catch(err){
-      if(!err.message.includes("Unknown browser:")){
-        throw new Error("Test case failed")
+      if(!err.message.includes('Unknown browser:')){
+        throw new Error('Test case failed')
       }
     }
   });
