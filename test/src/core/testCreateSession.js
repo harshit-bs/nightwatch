@@ -375,18 +375,7 @@ describe('test Request With Credentials', function () {
   });
 
   it('Test blank browserName', async function () {
-    nock('http://localhost:10195')
-      .post('/wd/hub/session')
-      .reply(201, {
-        status: 0,
-        sessionId: '1352110219202',
-        value: {
-          version: 'TEST',
-          platform: 'TEST'
-        }
-      });
-
-    try{
+    assert.throws(function() {
       let client = Nightwatch.createClient({
         selenium_port: 10195,
         silent: false,
@@ -396,19 +385,6 @@ describe('test Request With Credentials', function () {
           alwaysMatch: {}
         }
       });
-      const result = await client.createSession();
-
-      assert.deepStrictEqual(client.transport.desiredCapabilities, {
-        browserName: 'firefox'
-      });
-      assert.deepStrictEqual(result, {
-        sessionId: '1352110219202',
-        capabilities: {version: 'TEST', platform: 'TEST'}
-      });
-    }catch(err){
-      if(!err.message.includes('Unknown browser:')){
-        throw new Error('Test case failed')
-      }
-    }
+    }, /Error: Unknown browser:/);
   });
 });
