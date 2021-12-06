@@ -58,7 +58,7 @@ describe('assert.textEquals', function () {
         assert.strictEqual(instance.hasFailure(), false);
         assert.strictEqual(instance.getValue(), 'text result');
         assert.strictEqual(instance.getActual(), 'equals \'text result\'');
-        assert.strictEqual(err.message, `Test message in 5ms - expected "doesn\'t equal 'text result'" but got: "equals 'text result'" (${instance.elapsedTime}ms)`);
+        assert.strictEqual(err.message, `Test message in 5ms - expected "doesn't equal 'text result'" but got: "equals 'text result'" (${instance.elapsedTime}ms)`);
       }
     });
   });
