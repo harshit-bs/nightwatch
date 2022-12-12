@@ -52,31 +52,11 @@ describe('browser commands', function() {
     });
   });
     
-  it('testMove - elementId only parameters', function() {
-    Globals.runProtocolTest({
-      assertion: function() {},
-      commandName: 'moveTo',
-      args: ['testElement']
-    }, this.client).then(_ => {
-      assert.deepStrictEqual(args, ['testElement', 0, 0]);
-    });
-  });
-
-  it('testMove - elementId only parameters', function() {
-    Globals.runProtocolTest({
-      assertion: function() {},
-      commandName: 'moveTo',
-      args: []
-    }, this.client).then(_ => {
-      assert.deepStrictEqual(args, ['pointer', 0, 0]);
-    });
-  });
-
   it('testMove - invalid parameters', function(done) {
     Globals.runProtocolTest({
       assertion: function() {},
       commandName: 'moveTo',
-      args: [NaN]
+      args: ['test-element']
     }, this.client)
       .then(_ => done(new Error('should result into error')))
       .catch(err => done());
