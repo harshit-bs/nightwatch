@@ -122,14 +122,8 @@ describe('GeckoDriver Transport Tests', function () {
         onSetPath(h);
       }
 
-      addArguments(args) {
+      addArguments(...args) {
         onAddArguments(args);
-      }
-
-      enableVerboseLogging(value) {
-        onEnableVerboseLogging(value);
-
-        return this;
       }
 
       build() {
@@ -160,7 +154,7 @@ describe('GeckoDriver Transport Tests', function () {
 
         assert.strictEqual(this.serviceName, 'GeckoDriver');
         assert.strictEqual(this.outputFile, '_geckodriver.log');
-        assert.strictEqual(this.requiresDriverBinary, true);
+        assert.strictEqual(this.requiresDriverBinary, false);
         assert.strictEqual(this.defaultPort, undefined);
         assert.strictEqual(this.npmPackageName, 'geckodriver');
         assert.strictEqual(this.serviceDownloadUrl, 'https://github.com/mozilla/geckodriver/releases');
@@ -184,8 +178,7 @@ describe('GeckoDriver Transport Tests', function () {
 
     let serverPath;
     let serverPort;
-    let buildArgs;
-    let verboseLogging;
+    const buildArgs = [];
 
     mockServiceBuilder({
       onConstruct(server_path) {
@@ -193,15 +186,11 @@ describe('GeckoDriver Transport Tests', function () {
       },
 
       onAddArguments(args) {
-        buildArgs = args;
+        buildArgs.push(...args);
       },
 
       onSetPort(p) {
         serverPort = p;
-      },
-
-      onEnableVerboseLogging(v) {
-        verboseLogging = v;
       }
     });
 
@@ -220,40 +209,16 @@ describe('GeckoDriver Transport Tests', function () {
       session,
       serverPath,
       serverPort,
-      verboseLogging
+      buildArgs
     };
   }
-
-  it('test create session with firefox driver -- not found error', async function() {
-    let error;
-    mockery.registerMock('geckodriver', {
-      path: ''
-    });
-    try {
-      await GeckoDriverTestSetup({
-        desiredCapabilities: {
-          browserName: 'firefox'
-        },
-        webdriver: {
-          port: 9999,
-          start_process: true
-        }
-      });
-    } catch (err) {
-      error = err;
-    }
-
-    assert.ok(error instanceof Error);
-    assert.strictEqual(error.message, 'GeckoDriver cannot be found in the current project.');
-  });
-
 
   it('test create session with firefox driver', async function() {
     mockery.registerMock('geckodriver', {
       path: '/path/to/geckodriver'
     });
 
-    const {session, serverPath, serverPort, verboseLogging} = await GeckoDriverTestSetup({
+    const {session, serverPath, serverPort, buildArgs} = await GeckoDriverTestSetup({
       desiredCapabilities: {
         browserName: 'firefox'
       },
@@ -268,7 +233,7 @@ describe('GeckoDriver Transport Tests', function () {
     });
     assert.strictEqual(serverPath, '/path/to/geckodriver');
     assert.strictEqual(serverPort, 9999);
-    assert.strictEqual(verboseLogging, true);
+    assert.deepStrictEqual(buildArgs, ['-vv']);
   });
 
   it('test create session with gecko driver -- random port', async function() {
@@ -276,7 +241,7 @@ describe('GeckoDriver Transport Tests', function () {
       path: '/path/to/geckodriver'
     });
 
-    const {session, serverPath, serverPort} = await GeckoDriverTestSetup({
+    const {session, serverPath, serverPort, buildArgs} = await GeckoDriverTestSetup({
       desiredCapabilities: {
         browserName: 'firefox'
       },
@@ -292,8 +257,35 @@ describe('GeckoDriver Transport Tests', function () {
     });
     assert.strictEqual(serverPath, '/path/to/geckodriver');
     assert.strictEqual(serverPort, undefined);
+    assert.deepStrictEqual(buildArgs, ['-vv']);
 
     //Global port should be set to random assigned Port
     assert.strictEqual(HttpRequest.globalSettings.port, RANDOM_PORT);
+  });
+
+  it('test verbose logging is absent when --log cli_arg is used.', async () => {
+    mockery.registerMock('geckodriver', {
+      path: '/path/to/geckodriver'
+    });
+
+    const {session, serverPath, serverPort, buildArgs} = await GeckoDriverTestSetup({
+      desiredCapabilities: {
+        browserName: 'firefox'
+      },
+      webdriver: {
+        port: 9999,
+        start_process: true,
+        cli_args: [
+          '--log', 'fatal'
+        ]
+      }
+    });
+
+    assert.deepStrictEqual(session, {
+      sessionId: '1111', capabilities: {}
+    });
+    assert.strictEqual(serverPath, '/path/to/geckodriver');
+    assert.strictEqual(serverPort, 9999);
+    assert.deepStrictEqual(buildArgs, ['--log', 'fatal']);
   });
 });

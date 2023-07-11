@@ -132,11 +132,6 @@ class Globals {
       }
 
       client.queue.tree.empty().createRootNode();
-      client.queue.once('queue:finished', err => {
-        if (err) {
-          reject(err);
-        }
-      });
 
       client.isES6AsyncTestcase = true;
 
@@ -180,8 +175,8 @@ class Globals {
   }
 
   startTestRunner(testsPath, suppliedSettings) {
-    let settings = Settings.parse(suppliedSettings);
-    let runner = Runner.create(settings, {
+    const settings = Settings.parse(suppliedSettings);
+    const runner = Runner.create(settings, {
       reporter: 'junit'
     });
 

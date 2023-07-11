@@ -6,8 +6,8 @@ const CommandGlobals = require('../../lib/globals/commands.js');
 const {settings} = common;
 const {runTests} = common.require('index.js');
 
-describe('testRunnerSessionCreate', function() {
-  before(function(done) {
+describe('testRunnerSessionCreate', function () {
+  before(function (done) {
     this.server = MockServer.init();
 
     this.server.on('listening', () => {
@@ -15,17 +15,17 @@ describe('testRunnerSessionCreate', function() {
     });
   });
 
-  after(function(done) {
+  after(function (done) {
     CommandGlobals.afterEach.call(this, done);
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     process.removeAllListeners('exit');
     process.removeAllListeners('uncaughtException');
     process.removeAllListeners('unhandledRejection');
   });
 
-  it('testRunner with session create error using webdriver', function() {
+  it('testRunner with session create error using webdriver', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/simple'),
       path.join(__dirname, '../../sampletests/async')
@@ -49,7 +49,7 @@ describe('testRunnerSessionCreate', function() {
       url: '/session',
       statusCode: 500,
       postdata: JSON.stringify({
-        capabilities: {firstMatch: [{}], alwaysMatch: {browserName: 'firefox',  'nightwatch:options': {name: 'test-Name'}}}
+        capabilities: {firstMatch: [{}], alwaysMatch: {browserName: 'firefox', 'nightwatch:options': {name: 'test-Name'}}}
       }),
       response: JSON.stringify({
         value: {
@@ -80,7 +80,10 @@ describe('testRunnerSessionCreate', function() {
       },
       selenium_host: null,
       webdriver: {
-        host: 'localhost'
+        host: 'localhost',
+        timeout_options: {
+          retry_attempts: 0
+        }
       },
       globals,
       output: false,
@@ -88,7 +91,7 @@ describe('testRunnerSessionCreate', function() {
     }));
   });
 
-  it('testRunner with session create error using webdriver with --fail-fast argv', function() {
+  it('testRunner with session create error using webdriver with --fail-fast argv', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/simple'),
       path.join(__dirname, '../../sampletests/async')
@@ -140,7 +143,10 @@ describe('testRunnerSessionCreate', function() {
       },
       selenium_host: null,
       webdriver: {
-        host: 'localhost'
+        host: 'localhost',
+        timeout_options: {
+          retry_attempts: 0
+        }
       },
       globals,
       output: false,
@@ -154,7 +160,7 @@ describe('testRunnerSessionCreate', function() {
 
   });
 
-  it('testRunner with session create error using webdriver with enable_fail_fast setting', function() {
+  it('testRunner with session create error using webdriver with enable_fail_fast setting', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/simple'),
       path.join(__dirname, '../../sampletests/async')
@@ -205,7 +211,10 @@ describe('testRunnerSessionCreate', function() {
       },
       selenium_host: null,
       webdriver: {
-        host: 'localhost'
+        host: 'localhost',
+        timeout_options: {
+          retry_attempts: 0
+        }
       },
       globals,
       output: false,
@@ -220,7 +229,7 @@ describe('testRunnerSessionCreate', function() {
 
   });
 
-  it('testRunner with session ECONNREFUSED error using webdriver', function() {
+  it('testRunner with session ECONNREFUSED error using webdriver', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/simple'),
       path.join(__dirname, '../../sampletests/async')
@@ -259,7 +268,7 @@ describe('testRunnerSessionCreate', function() {
     });
   });
 
-  it('testRunner with not found server_path error', function() {
+  it('testRunner with not found server_path error', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/simple')
     ];
@@ -273,8 +282,8 @@ describe('testRunnerSessionCreate', function() {
         assert.strictEqual(results.lastError.sessionCreate, true);
         assert.strictEqual(results.lastError.showTrace, false);
         assert.ok(results.lastError instanceof Error);
-        assert.ok(results.lastError.detailedErr.includes('verify if webdriver is configured correctly; using:'));
-        assert.strictEqual(results.lastError.message, 'Unable to create the GeckoDriver process: The specified executable path does not exist: /bin/xxxxx');
+        assert.ok(results.lastError.detailedErr.includes(' Verify if GeckoDriver is configured correctly; using:'));
+        assert.strictEqual(results.lastError.message, 'An error occurred while creating a new GeckoDriver session: [Error] spawn /bin/xxxxx ENOENT');
       }
     };
 
@@ -298,7 +307,7 @@ describe('testRunnerSessionCreate', function() {
     });
   });
 
-  it('testRunner with incorrect server_path error', function() {
+  it('testRunner with incorrect server_path error', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/simple')
     ];
@@ -337,7 +346,7 @@ describe('testRunnerSessionCreate', function() {
     });
   });
 
-  it('test runner with reusing browser sessions', function() {
+  it('test runner with reusing browser sessions', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/reusebrowser')];
 
@@ -364,7 +373,7 @@ describe('testRunnerSessionCreate', function() {
     }, true);
 
 
-   
+
 
     const globals = {
       reporter(results) {
@@ -387,10 +396,10 @@ describe('testRunnerSessionCreate', function() {
       globals,
       output: false,
       output_folder: false
-    })); 
+    }));
   });
 
-  it('test runner with reusing browser sessions - using globals', function() {
+  it('test runner with reusing browser sessions - using globals', function () {
     const testsPath = [
       path.join(__dirname, '../../sampletests/reusebrowser')];
 
@@ -417,7 +426,7 @@ describe('testRunnerSessionCreate', function() {
     }, true);
 
 
-   
+
 
     const globals = {
       reuseBrowserSession: true,
@@ -440,6 +449,6 @@ describe('testRunnerSessionCreate', function() {
       globals,
       output: false,
       output_folder: false
-    })); 
+    }));
   });
 });

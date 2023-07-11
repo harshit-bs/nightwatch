@@ -2,7 +2,8 @@ const assert = require('assert');
 const {WebElement} = require('selenium-webdriver');
 const MockServer  = require('../../../../lib/mockserver.js');
 const CommandGlobals = require('../../../../lib/globals/commands-w3c.js');
-const Element = require('../../../../../lib/element/index.js');
+const common = require('../../../../common.js');
+const Element = common.require('element/index.js');
 
 describe('element().update() command', function () {
   before(function (done) {
@@ -94,7 +95,7 @@ describe('element().update() command', function () {
         })
       }, true);
 
-    const resultPromise = this.client.api.element('#signupSection').find('input[name=q]').update('nightwatch');
+    const resultPromise = this.client.api.element('#signupSection').find('input[name=q]').update('night', 'watch');
     // neither an instance of Element or Promise, but an instance of ScopedWebElement.
     assert.strictEqual(resultPromise instanceof Element, false);
     assert.strictEqual(typeof resultPromise.find, 'undefined');
@@ -140,7 +141,7 @@ describe('element().update() command', function () {
         })
       }, true);
 
-    const resultPromise = this.client.api.element.find('#signupSection').find('input[name=q]').update('nightwatch');
+    const resultPromise = this.client.api.element.find('#signupSection').find('input[name=q]').update(['night', 'watch']);
     // neither an instance of Element or Promise, but an instance of ScopedWebElement.
     assert.strictEqual(resultPromise instanceof Element, false);
     assert.strictEqual(typeof resultPromise.find, 'undefined');

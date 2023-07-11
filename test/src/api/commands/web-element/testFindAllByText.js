@@ -2,7 +2,8 @@ const assert = require('assert');
 const {WebElement} = require('selenium-webdriver');
 const MockServer  = require('../../../../lib/mockserver.js');
 const CommandGlobals = require('../../../../lib/globals/commands-w3c.js');
-const Element = require('../../../../../lib/element/index.js');
+const common = require('../../../../common.js');
+const Element = common.require('element/index.js');
 
 describe('element().findAllByText() commands', function () {
   before(function (done) {
@@ -18,7 +19,7 @@ describe('element().findAllByText() commands', function () {
       url: '/session/13521-10219-202/element/0/elements',
       postdata: {
         using: 'xpath',
-        value: '//*[text()="Email"]'
+        value: './/*[text()="Email"]'
       },
       method: 'POST',
       response: JSON.stringify({
@@ -64,7 +65,7 @@ describe('element().findAllByText() commands', function () {
       url: '/session/13521-10219-202/element/0/elements',
       postdata: {
         using: 'xpath',
-        value: '//*[contains(text(),"Email")]'
+        value: './/*[contains(text(),"Email")]'
       },
       method: 'POST',
       response: JSON.stringify({
@@ -97,7 +98,7 @@ describe('element().findAllByText() commands', function () {
       url: '/session/13521-10219-202/elements',
       postdata: {
         using: 'xpath',
-        value: '//*[text()="Email"]'
+        value: './/*[text()="Email"]'
       },
       method: 'POST',
       response: JSON.stringify({
