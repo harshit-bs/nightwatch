@@ -1,15 +1,15 @@
-Feature: Google Search
+Feature: Google Search-43
 Background: Background name
   Given I open the Rijksmuseum page
   And I dismiss the cookie dialog
   Then the title is "Rijksmuseum Amsterdam, home of the Dutch masters"
 
 @a @b
-Scenario: Searching the Rijksmuseum
+Scenario: Searching the Rijksmuseum-85
   Given I search "night watch"
   Then Body contains "Operation Night Watch"
 
 @a @b
-Scenario: Searching the Rijksmuseum-1
+Scenario: Searching the Rijksmuseum-86
   Given I search "night watch"
   Then Body contains "The Night Watch, Rembrandt van Rijn, 1642"
